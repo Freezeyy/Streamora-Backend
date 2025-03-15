@@ -47,18 +47,30 @@ async function index(req, res) {
 
 async function create(req, res) {
   try {
+    // Log request body and files for debugging
+    console.log('Request Body:', req.body);  // Should log the content of the post
+    console.log("CONTENT: ", req.body.content);
+    
+    console.log('Files:', req.files);  // Should log the uploaded files
+
     const { content } = req.body;
 
     // Create the post first
     const post = await m.Post.create({
-      user_id: req.user.id,
+      user_id: req.user.id,  // Ensure req.user is set correctly
       content,
     });
+
+    // Log the created post details
+    console.log('Created Post:', post);
 
     // Check if media files were uploaded
     if (req.files && req.files.length > 0) {
       // Save each media item
       const mediaPaths = req.files.map(file => path.join('/uploads/posts', file.filename));
+
+      // Log the media paths
+      console.log('Media Paths:', mediaPaths);
 
       const mediaPromises = mediaPaths.map(mediaPath => {
         return m.Media.create({
@@ -75,11 +87,16 @@ async function create(req, res) {
       include: [{ model: m.Media, as: 'media' }],
     });
 
+    // Log the post with media
+    console.log('Post with Media:', postWithMedia);
+
     res.status(201).json(postWithMedia); // Return post with media included
   } catch (error) {
-    res.status(500).json({ error });
+    console.error('Error creating post:', error);  // Log any error
+    res.status(500).json({ error: error.message });
   }
 }
+
 
 
 async function update(req, res) {

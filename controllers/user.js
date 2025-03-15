@@ -73,6 +73,25 @@ async function getDetails(req, res) {
     });
   }
 
+  // Check if 'with' query parameter exists and includes 'posts'
+  if (req.query.with && req.query.with.includes('posts')) {
+    includes.push({
+      model: m.Post,
+      as: 'posts',
+      attributes: ['id', 'content', 'createdAt'], // Specify necessary post attributes
+      include: [
+        { model: m.Media, as: 'media', attributes: ['media_path'] }, // Include media associated with the post
+        {
+          model: m.Comment,
+          as: 'comments',
+          attributes: ['id', 'comment', 'user_id'],
+          include: [{ model: m.User, as: 'user', attributes: ['id', 'name'] }], // Include comment authors
+        },
+        { model: m.Like, as: 'likes', attributes: ['user_id'] }, // Include likes
+      ],
+    });
+  }  
+
   try {
     const user = await m.User.findOne({
       where: { id },

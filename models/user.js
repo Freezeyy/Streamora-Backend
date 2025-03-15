@@ -41,7 +41,11 @@ module.exports = (sequelize, DataTypes) => {
     image: DataTypes.TEXT,
     reset_token: DataTypes.STRING,
     verifiedAt: DataTypes.DATE,
-    RoleId: DataTypes.INTEGER,
+    RoleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    }
   }, {
     sequelize,
     modelName: 'User',
