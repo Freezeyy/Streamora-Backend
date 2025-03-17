@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Role);
       this.hasMany(models.Post, { foreignKey: 'user_id', as: 'posts' });
       this.hasMany(models.Comment, { foreignKey: 'user_id', as: 'comments' });
+      this.hasMany(models.Event, { foreignKey: 'user_id', as: 'events' });
+
       
       // Followers of this user
       this.belongsToMany(models.User, {

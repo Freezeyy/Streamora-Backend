@@ -23,6 +23,14 @@ router.post('/posts/:postId/like', m.requireAdminOrUser, c.like.toggleLike); // 
 router.post('/follow', m.requireAdminOrUser, c.follower.follow); // Follow a user
 router.post('/unfollow', m.requireAdminOrUser, c.follower.unfollow); // Unfollow a user
 
+// Event management
+router.post('/events', m.requireAdminOrUser, c.event.createEvent);
+router.put('/events/:eventId', m.requireAdminOrUser, c.event.updateEvent);
+router.delete('/events/:eventId', m.requireAdminOrUser, c.event.deleteEvent);
+router.get('/events', c.event.getEvents);
+router.get('/events/:eventId', c.event.getEventById);
+
+
 // Let's say the route below is very sensitive and we want only authorized users to have access
 // router.get('/nationalgps', c.nationalgps.index);
 // router.post('/nationalgps', c.nationalgps.saveorupdate);
