@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Post, { foreignKey: 'user_id', as: 'posts' });
       this.hasMany(models.Comment, { foreignKey: 'user_id', as: 'comments' });
       this.hasMany(models.Event, { foreignKey: 'user_id', as: 'events' });
+      this.hasMany(models.Story, { foreignKey: 'user_id', as: 'stories' });
 
       
       // Followers of this user
@@ -37,12 +38,22 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     name: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING(30),
+      unique: true,
+    },
     password: DataTypes.STRING,
     phone: DataTypes.STRING,
+    whatsapp_jid: DataTypes.STRING(80),
     email: DataTypes.STRING,
     image: DataTypes.TEXT,
+    bio: DataTypes.TEXT,
     reset_token: DataTypes.STRING,
     verifiedAt: DataTypes.DATE,
+    is_private: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     RoleId: {
       type: DataTypes.INTEGER,
       allowNull: false,

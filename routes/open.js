@@ -7,6 +7,7 @@ const c = require('../controllers');
 
 router.get('/', c.general.index);
 router.get('/staticdata', c.general.staticdata);
+router.get('/whatsapp-bot', c.general.whatsappBot);
 router.post('/login', c.auth.login);
 router.post('/signup', c.auth.signup);
 router.get('/verify-email', c.auth.verifyEmail);
@@ -21,5 +22,6 @@ router.post('/reset-password', c.auth.passwordResetTokenValidation, c.auth.passw
 router.get('/posts', c.post.index); // Get all posts
 router.get('/posts/:postId', c.post.getDetails); // Get post details by ID
 router.get('/posts/:postId/comments', c.comment.index); // Get comments for a post
+router.get('/posts/:postId/likes', c.like.index); // Get users who liked a post
 
 module.exports = router;

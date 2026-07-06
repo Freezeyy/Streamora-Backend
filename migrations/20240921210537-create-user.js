@@ -1,40 +1,12 @@
 'use strict';
+
+/**
+ * Legacy duplicate of 20200909063445-create-user.js — kept for SequelizeMeta history only.
+ * Do not create Users here; use add-column migrations (e.g. add-bio-to-users) instead.
+ */
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      username: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      profile_image: {
-        type: Sequelize.STRING
-      },
-      bio: {
-        type: Sequelize.TEXT
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
-  },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
-  }
+  async up() {},
+
+  async down() {},
 };

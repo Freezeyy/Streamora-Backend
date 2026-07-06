@@ -1,4 +1,5 @@
 const m = require('../models');
+const { getWhatsAppBotConfig } = require('../helper/whatsappBot');
 
 function index(req, res) {
   res.json({ message: 'Its Alive' });
@@ -14,4 +15,8 @@ async function staticdata(req, res) {
   }
 }
 
-module.exports = { index, staticdata };
+function whatsappBot(req, res) {
+  res.json(getWhatsAppBotConfig());
+}
+
+module.exports = { index, staticdata, whatsappBot };

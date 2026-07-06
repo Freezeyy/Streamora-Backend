@@ -12,11 +12,12 @@ const multer = require('multer');
 const upload = multer();
 const custommiddleware = require('./middleware');
 const schema = require('./gql/schema'); // comment this if dont need graphql
+const storage = require('./config/storage');
 
 const path = require('path');
 
-//uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// uploaded files (disk path is configurable via STORAGE_ABSOLUTE_PATH)
+app.use('/uploads', express.static(storage.STORAGE_ROOT));
 
 // routes
 const openRoute_lists = require('./routes/open');
@@ -57,6 +58,7 @@ app.use('/', openRoute_lists);
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`);
+  console.log(`Media storage: ${storage.STORAGE_ROOT}`);
 });
 
 module.exports = app;

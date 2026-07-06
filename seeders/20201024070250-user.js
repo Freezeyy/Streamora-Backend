@@ -13,7 +13,7 @@ module.exports = {
       image: helper.getRandomImage(),
       verifiedAt: faker.date.past(2),
     },
-    ...[...Array(100)].map(() => ({
+    ...[...Array(10)].map(() => ({
       name: faker.name.findName(),
       email: faker.internet.email(),
       phone: faker.phone.phoneNumber(),

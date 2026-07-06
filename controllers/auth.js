@@ -47,30 +47,34 @@ function signup(req, res, next) {
   passport.authenticate('signup', { session: false }, async (err, user, info) => {
     try {
       if (err || !user) {
-        res.status(401).json({ error: 'fail to register user', message: info.message });
+        res.status(401).json({
+          error: 'fail to register user',
+          message: info?.message || 'Registration failed',
+        });
         return;
       }
 
-      console.log('User:', user);
-      
-
-      // Generate a token for email confirmation
       const verificationToken = jwt.sign(
-        { uid: user.id, email: user.email }, 
-        process.env.PROJECT_JWT_SECRET, 
-        { expiresIn: '24h' }
+        { uid: user.id, email: user.email },
+        process.env.PROJECT_JWT_SECRET,
+        { expiresIn: '24h' },
       );
-      
-      // Save the token in the user record or send it via email
-      const verificationUrl = `${req.body.redirect_url}/verify-email?token=${verificationToken}`;
-      
-      // Call your email service to send the verification email
-      svc.verifyMail(user, verificationUrl);
 
-      console.log("REFRESHHHHH TOKEN: ", process.env.GMAIL_OAUTH_REFRESH_TOKEN);
-      
+      const baseUrl = (req.body.redirect_url || process.env.APP_URL || 'http://localhost:3000')
+        .replace(/\/$/, '');
+      const verificationUrl = `${baseUrl}/verify-email?token=${verificationToken}`;
 
-      res.status(201).json({ user, message: 'Verification email sent!' });
+      try {
+        await svc.verifyMail(user, verificationUrl);
+        res.status(201).json({ user, message: 'Verification email sent!' });
+      } catch (emailError) {
+        console.error('Failed to send verification email:', emailError.message);
+        res.status(201).json({
+          user,
+          message: 'Account created, but the verification email could not be sent. Check MAIL_* settings in .env.',
+          emailSent: false,
+        });
+      }
     } catch (error) {
       next(error);
     }
