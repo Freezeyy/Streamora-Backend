@@ -24,17 +24,21 @@ const fileFilter = (_req, file, cb) => {
   const ext = path.extname(file.originalname).toLowerCase();
   const { mimetype } = file;
 
-  if (mimetype.startsWith('image/') || mimetype.startsWith('video/')) {
+  const blockedPrefixes = ['application/', 'text/', 'audio/'];
+  if (blockedPrefixes.some((prefix) => mimetype.startsWith(prefix))) {
+    cb(new Error('Stories only support photos and videos (no documents or other files)'), false);
+    return;
+  }
+
+  const isAllowedImage = mimetype.startsWith('image/') || IMAGE_EXTENSIONS.has(ext);
+  const isAllowedVideo = mimetype.startsWith('video/') || VIDEO_EXTENSIONS.has(ext);
+
+  if (isAllowedImage || isAllowedVideo) {
     cb(null, true);
     return;
   }
 
-  if (VIDEO_EXTENSIONS.has(ext) || IMAGE_EXTENSIONS.has(ext)) {
-    cb(null, true);
-    return;
-  }
-
-  cb(new Error(`File type not allowed for stories (${mimetype || ext || 'unknown'})`), false);
+  cb(new Error('Stories only support photos and videos (no documents or other files)'), false);
 };
 
 const uploadStory = multer({
